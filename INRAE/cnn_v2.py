@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import tensorflow as tf
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Activation, BatchNormalization
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, MaxPool2D, Activation, ZeroPadding2D, Convolution2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import RMSprop
 
@@ -12,7 +12,8 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-path_to_db = '/home/corentin/Documents/IRBI'
+path_to_db = '/home/corentin/Documents/INRAE/V2/'
+
 
 if len(sys.argv) > 2:
     print("Trop de paramètre en entrée")
@@ -22,12 +23,12 @@ elif len(sys.argv) > 1:
 else:
     EPOCHS=50 
 
-BATCH_SIZE = 128
+EPOCHS=10 
+BATCH_SIZE = 32
 IMG_HEIGHT = 150
 IMG_WIDTH = 150
 
 PATH = os.path.join(path_to_db)
-
 train_dir = os.path.join(PATH, 'train')
 validation_dir = os.path.join(PATH, 'validation')
 models_dir = os.path.join(PATH, 'models')
@@ -57,11 +58,11 @@ model.add(MaxPooling2D())
 
 model.add(Flatten())
 model.add(Dense(512, activation='relu'))
-model.add(Dense(NUM_OF_CLASS, activation='sigmoid'))
+model.add(Dense(NUM_OF_CLASS, activation='softmax'))
 
 opt= RMSprop(learning_rate=0.0001, decay=1e-6)
 model.compile(optimizer=opt,
-              loss='binary_crossentropy',
+              loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 model.summary() 
